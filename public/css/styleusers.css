@@ -1,0 +1,60 @@
+*{
+    padding:0px;
+    margin: 0px;
+}
+
+body
+{
+    background-color:black;
+    color: white;
+}
+
+.home
+{
+    margin-top: 22px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;    
+    background-color: bisque;}
+
+.userdata
+{   display: flex;
+    /* align-items: center; */
+    justify-content: space-evenly;
+    margin-top: 13px;
+    background-color: black;
+    width: 340px;
+    flex-direction: column;
+    height: 236px;
+    border-radius: 24px;
+}
+
+h1
+{
+    margin: 8px 26px 8px 26px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 19px;
+    background-color: red;
+    height: 34px;
+    padding-top: 10px;
+    padding-left: 10px;
+    border-radius: 12px;
+}
+
+.head
+{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.title
+{
+    font-size: 35px;
+    background: none;
+    color: black;
+    font-family: system-ui;
+    margin-bottom: 21px;
+    /* border-bottom: 3px solid red; */
+    padding-left: 0px;}

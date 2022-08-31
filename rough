@@ -1,0 +1,159 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const passport = require('passport');
+const app = express();
+const port = process.env.PORT || 10;
+const path = require('path');
+const { rmSync } = require('fs');
+const bcrypt = require('bcrypt');
+const { render } = require('pug');
+const { registerHelper } = require('hbs');
+const LocalStrategy = require('passport-local').Strategy;
+app.set('view-engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(express.static(__dirname + '/public'));
+
+main().catch(err => console.log(err));
+
+async function main()  {
+    await mongoose.connect('mongodb+srv://muneebbinayub:muneeb123@cluster0.adtxleg.mongodb.net/user?retryWrites=true&w=majority');
+}
+
+mongoose.connection.once('open', function () {
+    console.log('connected db successfully')
+})
+
+// schema
+
+const projectSchema = new mongoose.Schema({
+    username: String,
+    password: String
+});
+
+
+const userSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    balance:{
+        type:Number,
+        required:true
+    },
+    monthly:{
+        type:String,
+        required:true
+    }
+})
+// class || model
+
+const project = mongoose.model('project', projectSchema);
+const userData = mongoose.model('userdata', userSchema);
+
+// const userdatasave = userdata({name:'hello',email:'muneebdfklsd',password:'jdflsjdlkf;'});
+
+// server
+app.get('/', (req, res) => {
+    res.render('login.ejs', { warning: '' });
+    // res.sendFile('index.html',{root:__dirname});
+})
+
+app.post('/', (req, res) => {
+
+    const namefetch = req.body.name;
+    const emailfetch = req.body.email;
+    const passwordfetch = req.body.password;
+    const passworddfetch = req.body.password2;
+    let emailDuplicacy;
+    userData.findOne({ email: emailfetch }, async function (err, data) {
+        if(err)
+        console.log(err.stack);
+        if(data)
+            res.render('index.ejs',{warning:'User already exist'});
+            else if(!namefetch)
+                res.render('index.ejs',{warning:'Name cant be empty'});
+        else if(passworddfetch.length<8)
+             res.render('index.ejs',{warning:'Password length should be greater than 8'})
+        else if(passwordfetch!==passworddfetch)
+             res.render('index.ejs',{warning:'Passwords dosent match'});
+        else
+        {
+            const userSave = new userData({name:namefetch,email:emailfetch,password:passwordfetch});
+            userSave.save(function(err,result){
+                if (err){
+                    console.log(err);
+                }
+                else{
+                    console.log('success');
+                    res.redirect('/login');
+                }
+            })
+        }
+        });
+    })
+    
+    app.get('/data',(req,res)=>{
+        // res.render('data.ejs');
+        // res.render('user.ejs',{name:data.name,balance:data.balance,monthly:data.monthly});                
+    userData.find((err,data)=>{
+        if(err) 
+        console.log(err);
+        if(data)
+        {
+            console.log(data);
+            res.render('data.ejs',{
+                name1:data[0].name,
+                name2:data[1].name,
+                name3:data[2].name,
+                name4:data[3].name,
+            })       
+        }
+    })
+})
+
+app.post('/login', (req, res) => {
+    const email=req.body.email;
+    const password= req.body.password;
+    // console.log(password)
+    userData.findOne({email:email},function(err,data){
+        if(err)
+        {
+            console.log(err.stack);
+        }
+        if(data)
+        {
+            if(password==data.password)
+            {
+                res.render('user.ejs',{name:data.name,balance:data.balance,monthly:data.monthly});                
+            }
+            else
+                res.render('login.ejs',{warning:'Incorrect password'});    
+        }
+        else
+            res.render('login.ejs',{warning:'User not found'});
+    }
+    )
+    // res.render('login.ejs',{warning:'something is wrong'})
+})
+
+app.get('/login', (req, res) => {
+    res.render('login.ejs',{warning:''});
+})
+
+app.listen(port, (req, res) => {
+    console.log('http://localhost:10');
+})

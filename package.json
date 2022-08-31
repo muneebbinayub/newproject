@@ -1,0 +1,19 @@
+{
+  "name": "mainproject",
+  "version": "1.0.0",
+  "description": "best one",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "muneebbinayub",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "git": "^0.1.5",
+    "mongoose": "^6.5.3",
+    "nodemon": "^2.0.19"
+  }
+}
