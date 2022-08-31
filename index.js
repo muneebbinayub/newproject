@@ -3,10 +3,12 @@ const nodemon = require('nodemon');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const app = express();
+const port = process.env.PORT || 1000; 
 app.set('view-engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
+
 
 // connection to mongoDb
 
@@ -96,6 +98,6 @@ app.post('/update', (req, res) => {
         } );
 })
 
-app.listen(1000, (req, res) => {
+app.listen(port, (req, res) => {
     console.log('http://localhost:1000/');
 })
